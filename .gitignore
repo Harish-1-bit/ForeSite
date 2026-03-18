@@ -1,0 +1,55 @@
+# Dependency directories
+node_modules/
+jspm_packages/
+bower_components/
+
+# Credentials & Environment Variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Server Build / Output
+dist/
+dist-ssr/
+build/
+out/
+.next/
+server/build/
+client/build/
+client/dist/
+
+# OS Generated Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Testing
+coverage/
+.nyc_output/
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.project
+.settings/
+
+# Misc
+.vercel
+.netlify
+.env*.local
