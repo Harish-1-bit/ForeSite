@@ -1,3 +1,6 @@
+import puter from "@heyputer/puter.js";
+import axios from "axios";
+
 function parseModelJson(content, res) {
   // Strip <think>...</think> blocks if present
   let cleanContent = content;
@@ -28,6 +31,33 @@ function parseModelJson(content, res) {
   } catch (error) {}
 }
 
+const callNvidiaApi = async (prompt) => {
+  const invokeUrl = "https://integrate.api.nvidia.com/v1/chat/completions";
+  const headers = {
+    "Authorization": `Bearer ${process.env.NVIDIA_API_KEY}`,
+    "Accept": "application/json",
+    "Content-Type": "application/json"
+  };
+
+  const payload = {
+    "model": "mistralai/mistral-small-4-119b-2603",
+    "reasoning_effort": "high",
+    "messages": [
+      {
+        "role": "user",
+        "content": prompt
+      }
+    ],
+    "max_tokens": 16384,
+    "temperature": 0.10,
+    "top_p": 1.00,
+    "stream": false
+  };
+
+  const response = await axios.post(invokeUrl, payload, { headers });
+  return response.data;
+};
+
 export const aiResponse = async (text) => {
   try {
     const prompt = `You are a buyer-focused real estate assistant for a property app.
@@ -57,29 +87,27 @@ Inputs (may be objects/arrays; extract what you can without guessing):
 - Property object: ${text?.property ?? "Not provided"}
 - Price change array: ${text?.priceChange ?? "Not Available"}`;
 
-    const aiRes = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "liquid/lfm-2.5-1.2b-thinking:free",
-        messages: [{ role: "user", content: text ? prompt : "" }],
-      }),
-    });
+    const provider = process.env.AI_PROVIDER || "puter";
+    let content = "";
 
-    const data = await aiRes.json();
-
-    if (!aiRes.ok) {
-      const errMsg =
-        data?.error?.message ||
-        data?.message ||
-        `OpenRouter error (${aiRes.status})`;
-      throw new Error(errMsg);
+    if (provider === "nvidia" && process.env.NVIDIA_API_KEY) {
+      const response = await callNvidiaApi(text ? prompt : "");
+      content = response?.choices?.[0]?.message?.content || "";
+    } else {
+      if (process.env.PUTER_TOKEN) {
+        puter.setAuthToken(process.env.PUTER_TOKEN);
+      }
+      const aiRes = await puter.ai.chat(text ? prompt : "", {
+        model: "claude-3-5-sonnet",
+      });
+      content =
+        aiRes?.message?.content?.[0]?.text ||
+        aiRes?.message ||
+        aiRes?.text ||
+        aiRes?.toString() ||
+        "";
     }
 
-    const content = data?.choices?.[0]?.message?.content;
     const parsed = parseModelJson(content);
 
     // Return parsed JSON object when possible, otherwise return raw string for debugging.
@@ -102,14 +130,20 @@ export const roiCalculation = async (context, res) => {
     const purchaseFees = Number(context?.purchaseFees) || 0;
 
     let estimatedCurrentValue = Number(context?.currentValue) || null;
-    if (!estimatedCurrentValue && appreciationRate > 0 && propertyPrice > 0 && holdingYears > 0) {
-      estimatedCurrentValue = propertyPrice * Math.pow(1 + (appreciationRate / 100), holdingYears);
+    if (
+      !estimatedCurrentValue &&
+      appreciationRate > 0 &&
+      propertyPrice > 0 &&
+      holdingYears > 0
+    ) {
+      estimatedCurrentValue =
+        propertyPrice * Math.pow(1 + appreciationRate / 100, holdingYears);
     }
 
     const totalMaintenanceCost = maintainCost * holdingYears;
     const totalRentalIncome = rentalIncome * holdingYears;
     const totalPropertyTax = propertyTax * holdingYears;
-    
+
     let netProfit = null;
     let totalROI = null;
     let annualizedROI = null;
@@ -117,19 +151,28 @@ export const roiCalculation = async (context, res) => {
     let totalReturnMultiple = null;
 
     if (estimatedCurrentValue && propertyPrice > 0) {
-      netProfit = (estimatedCurrentValue - propertyPrice) - totalMaintenanceCost + totalRentalIncome - totalPropertyTax - purchaseFees;
+      netProfit =
+        estimatedCurrentValue -
+        propertyPrice -
+        totalMaintenanceCost +
+        totalRentalIncome -
+        totalPropertyTax -
+        purchaseFees;
       totalROI = (netProfit / propertyPrice) * 100;
-      annualizedROI = (Math.pow(1 + (totalROI / 100), 1 / holdingYears) - 1) * 100;
+      annualizedROI =
+        (Math.pow(1 + totalROI / 100, 1 / holdingYears) - 1) * 100;
       totalReturnMultiple = estimatedCurrentValue / propertyPrice;
     }
 
     if (propertyPrice > 0 && rentalIncome > 0) {
-       cashOnCashReturn = (rentalIncome / propertyPrice) * 100;
+      cashOnCashReturn = (rentalIncome / propertyPrice) * 100;
     }
 
     const summaryData = {
       propertyPrice: propertyPrice || null,
-      estimatedCurrentValue: estimatedCurrentValue ? Number(estimatedCurrentValue.toFixed(2)) : null,
+      estimatedCurrentValue: estimatedCurrentValue
+        ? Number(estimatedCurrentValue.toFixed(2))
+        : null,
       totalMaintenanceCost: totalMaintenanceCost || null,
       totalRentalIncome: totalRentalIncome || null,
       totalPropertyTax: totalPropertyTax || null,
@@ -140,9 +183,14 @@ export const roiCalculation = async (context, res) => {
 
     const returnsData = {
       totalROI: totalROI !== null ? Number(totalROI.toFixed(2)) : null,
-      annualizedROI: annualizedROI !== null ? Number(annualizedROI.toFixed(2)) : null,
-      cashOnCashReturn: cashOnCashReturn !== null ? Number(cashOnCashReturn.toFixed(2)) : null,
-      totalReturnMultiple: totalReturnMultiple !== null ? Number(totalReturnMultiple.toFixed(2)) : null,
+      annualizedROI:
+        annualizedROI !== null ? Number(annualizedROI.toFixed(2)) : null,
+      cashOnCashReturn:
+        cashOnCashReturn !== null ? Number(cashOnCashReturn.toFixed(2)) : null,
+      totalReturnMultiple:
+        totalReturnMultiple !== null
+          ? Number(totalReturnMultiple.toFixed(2))
+          : null,
     };
 
     // 2. Simplified prompt to generate textual assessment ONLY based on exact numbers
@@ -157,9 +205,9 @@ INPUTS:
 - Location: ${context?.location ?? "Not provided"}
 - Property Price: ${propertyPrice}
 - Holding Years: ${holdingYears}
-- Net Profit: ${netProfit !== null ? netProfit.toFixed(2) : 'Insufficient Data'}
-- Total ROI: ${totalROI !== null ? totalROI.toFixed(2) + '%' : 'Insufficient Data'}
-- Annualized ROI: ${annualizedROI !== null ? annualizedROI.toFixed(2) + '%' : 'Insufficient Data'}
+- Net Profit: ${netProfit !== null ? netProfit.toFixed(2) : "Insufficient Data"}
+- Total ROI: ${totalROI !== null ? totalROI.toFixed(2) + "%" : "Insufficient Data"}
+- Annualized ROI: ${annualizedROI !== null ? annualizedROI.toFixed(2) + "%" : "Insufficient Data"}
 
 Return JSON in EXACTLY this shape:
 {
@@ -177,31 +225,39 @@ Return JSON in EXACTLY this shape:
   "missingDataWarnings": ["Identify any crucial missing inputs"]
 }`;
 
-    const aiRes = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "liquid/lfm-2.5-1.2b-thinking:free",
-        messages: [{ role: "user", content: prompt }],
-      }),
-    });
+    const provider = process.env.AI_PROVIDER || "puter";
+    let content = "";
 
-    const data = await aiRes.json();
-    if (!aiRes.ok) {
-      const errMsg = data?.error?.message || data?.message || `OpenRouter error (${aiRes.status})`;
-      throw new Error(errMsg);
+    if (provider === "nvidia" && process.env.NVIDIA_API_KEY) {
+      const response = await callNvidiaApi(prompt);
+      content = response?.choices?.[0]?.message?.content || "";
+    } else {
+      if (process.env.PUTER_TOKEN) {
+        puter.setAuthToken(process.env.PUTER_TOKEN);
+      }
+      const aiRes = await puter.ai.chat(prompt, { model: "claude-3-5-sonnet" });
+
+      content =
+        aiRes?.message?.content?.[0]?.text ||
+        aiRes?.message ||
+        aiRes?.text ||
+        aiRes?.toString() ||
+        "";
     }
-    const content = data?.choices?.[0]?.message?.content;
+    
     const parsed = parseModelJson(content);
 
     // If parsing fails completely, provide an empty fallback text object to pair with math
     const fallbackText = {
       riskAssessment: { level: "Unknown", factors: [] },
-      recommendation: { verdict: "Unknown", summary: "Failed to generate recommendation.", pros: [], cons: [], details: "" },
-      missingDataWarnings: []
+      recommendation: {
+        verdict: "Unknown",
+        summary: "Failed to generate recommendation.",
+        pros: [],
+        cons: [],
+        details: "",
+      },
+      missingDataWarnings: [],
     };
 
     const finalAiData = parsed || fallbackText;
@@ -210,7 +266,7 @@ Return JSON in EXACTLY this shape:
     return {
       summary: summaryData,
       returns: returnsData,
-      ...finalAiData
+      ...finalAiData,
     };
   } catch (error) {
     console.log(error);

@@ -17,6 +17,11 @@ import { ROICalculator } from "./page/RoiCalculator";
 import About from "./page/About";
 import Contact from "./page/Contact";
 
+import CustomerHero from "./components/hero/CustomerHero";
+import SellerHero from "./components/hero/SellerHero";
+import AdminHero from "./components/hero/AdminHero";
+import CustomerDashboard from "./page/customer/CustomerDashboard";
+
 const App = () => {
   return (
     <>
@@ -25,6 +30,7 @@ const App = () => {
         {/* Admin Routes */}
         <Routes>
           <Route path="/admin" element={<PrivateComponent />}>
+            <Route index element={<AdminHero />} />
             <Route path="dashboard" element={<AdminDashboard />} />
             <Route
               path="property-management"
@@ -33,9 +39,14 @@ const App = () => {
             <Route path="user-management" element={<UserManagement />} />
           </Route>
 
+          <Route path="/seller" element={<SellerHero />} />
           <Route path="/seller/dashboard" element={<SellerDashboard />} />
           <Route path="/seller/listings" element={<SellerListing />} />
           <Route path="/seller/inquiries" element={<SellerInquiry />} />
+
+          <Route path="/customer" element={<CustomerHero />} />
+          <Route path="/customer/dashboard" element={<CustomerDashboard />} />
+          <Route path="/user/dashboard" element={<CustomerDashboard />} />
           <Route path="/all-properties" element={<AllProperties />} />
           <Route path="/property/:id" element={<SingleProperty />} />
           <Route path="/roi-calculator" element={<ROICalculator />} />

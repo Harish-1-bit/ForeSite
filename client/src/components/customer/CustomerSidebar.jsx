@@ -1,9 +1,6 @@
 import {
-  LucideHouse,
   LucideLayoutDashboard,
-  LucideLifeBuoy,
-  LucideLineChart,
-  LucideMail,
+  LucideSearch,
   LucideSettings,
   User,
   X,
@@ -12,7 +9,7 @@ import { useSelector } from "react-redux";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
-const SellerSidebar = ({ isOpen, onClose }) => {
+const CustomerSidebar = ({ isOpen, onClose }) => {
   const { user } = useSelector((state) => state.auth);
   const location = useLocation();
   const navigate = useNavigate();
@@ -22,19 +19,13 @@ const SellerSidebar = ({ isOpen, onClose }) => {
       id: "dashboard",
       label: "Dashboard",
       icon: <LucideLayoutDashboard className="w-4 h-4" />,
-      href: "/seller/dashboard",
+      href: "/user/dashboard",
     },
     {
-      id: "listings",
-      label: "My Listings",
-      icon: <LucideHouse className="w-4 h-4" />,
-      href: "/seller/listings",
-    },
-    {
-      id: "inquiries",
-      label: "Inquiries",
-      icon: <LucideMail className="w-4 h-4" />,
-      href: "/seller/inquiries",
+      id: "properties",
+      label: "Browse Properties",
+      icon: <LucideSearch className="w-4 h-4" />,
+      href: "/all-properties",
     },
   ];
 
@@ -56,7 +47,7 @@ const SellerSidebar = ({ isOpen, onClose }) => {
           className="flex items-center gap-3 group"
           onClick={() => onClose?.()}
         >
-          <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-black text-lg shadow-lg shadow-blue-200 group-hover:scale-105 transition-transform">
+          <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white font-black text-lg shadow-lg shadow-indigo-200 group-hover:scale-105 transition-transform">
             FS
           </div>
           <div>
@@ -64,7 +55,7 @@ const SellerSidebar = ({ isOpen, onClose }) => {
               ForeSite
             </div>
             <div className="text-[0.6rem] font-bold text-slate-400 uppercase tracking-widest">
-              Seller Hub
+              Customer Hub
             </div>
           </div>
         </Link>
@@ -93,8 +84,8 @@ const SellerSidebar = ({ isOpen, onClose }) => {
                 }}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all duration-200 ${
                   isActive
-                    ? "bg-blue-600 text-white shadow-lg shadow-blue-200"
-                    : "text-slate-600 hover:bg-slate-50 hover:text-blue-600"
+                    ? "bg-indigo-600 text-white shadow-lg shadow-indigo-200"
+                    : "text-slate-600 hover:bg-slate-50 hover:text-indigo-600"
                 }`}
               >
                 <span className={isActive ? "text-white" : "text-slate-400"}>
@@ -107,31 +98,40 @@ const SellerSidebar = ({ isOpen, onClose }) => {
         </nav>
 
         <div className="mt-10 text-[0.65rem] font-bold text-slate-400 uppercase tracking-widest px-4 mb-4">
-          Settings
+          System
         </div>
         <nav className="space-y-1.5">
-          {configItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => {
-                if (item.href) {
-                  navigate(item.href);
-                  onClose?.();
-                }
-              }}
-              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-50 hover:text-blue-600 transition-all duration-200"
-            >
-              <span className="text-slate-400">{item.icon}</span>
-              <span>{item.label}</span>
-            </button>
-          ))}
+          {configItems.map((item) => {
+            const isActive = location.pathname === item.href;
+            return (
+              <button
+                key={item.id}
+                onClick={() => {
+                  if (item.href) {
+                    navigate(item.href);
+                    onClose?.();
+                  }
+                }}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all duration-200 ${
+                  isActive
+                    ? "bg-indigo-600 text-white shadow-lg shadow-indigo-200"
+                    : "text-slate-600 hover:bg-slate-50 hover:text-indigo-600"
+                }`}
+              >
+                <span className={isActive ? "text-white" : "text-slate-400"}>
+                  {item.icon}
+                </span>
+                <span>{item.label}</span>
+              </button>
+            );
+          })}
         </nav>
       </div>
 
       {/* User Profile */}
       <div className="p-4 border-t border-slate-100">
         <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-2xl border border-slate-100">
-          <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-blue-600 font-black text-sm shadow-sm">
+          <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-indigo-600 font-black text-sm shadow-sm">
             {user?.name?.charAt(0).toUpperCase()}
           </div>
           <div className="min-w-0">
@@ -183,4 +183,4 @@ const SellerSidebar = ({ isOpen, onClose }) => {
   );
 };
 
-export default SellerSidebar;
+export default CustomerSidebar;

@@ -250,7 +250,7 @@ export default function AddPropertyModal({ handleModal, openModal }) {
 
               {/* Price */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Price ($)</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Price (₹)</label>
                 <input
                 name='price'
                 onChange={handleChange}

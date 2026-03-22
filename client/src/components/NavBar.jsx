@@ -1,142 +1,264 @@
-import { ChevronDown, LogOut, Menu, Settings, TrendingUp, User } from 'lucide-react'
-import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-import { logoutUser } from '../features/auth/authSlice'
+import { ChevronDown, LogOut, Menu, Settings, User, X } from "lucide-react";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { logoutUser } from "../features/auth/authSlice";
+import { motion, AnimatePresence } from "framer-motion";
 
 const NavBar = () => {
-    const dispatch = useDispatch()
-    const {user}=useSelector((state)=>state.auth)
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const navigate = useNavigate()
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
+
   const roleRoutes = {
-    admin:'/admin/dashboard',
-    seller:'/seller/dashboard',
-    customer:'/user/dashboard'
-  }
-  const handleProfile=(user)=>{
-    const route= roleRoutes[user?.role] ||'/login'
-    navigate(route)
-  }
+    admin: "/admin/dashboard",
+    seller: "/seller/dashboard",
+    customer: "/user/dashboard",
+  };
+
+  const handleProfile = (user) => {
+    const route = roleRoutes[user?.role] || "/login";
+    navigate(route);
+    setIsMobileMenuOpen(false);
+  };
+
+  const navLinks = [
+    { name: "Properties", path: "/all-properties" },
+    { name: "ROI Calculator", path: "/roi-calculator" },
+    { name: "About", path: "/about" },
+    { name: "Contact", path: "/contact" },
+  ];
+
   return (
-    user ? (
-          <nav className="w-full bg-white border-b border-gray-200 shadow-sm">
+    <nav className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-xl border-b border-slate-200/50 shadow-sm transition-all">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-20">
           {/* Left Side: Logo/Brand */}
-          <Link to={'/'} className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">FS</span>
+          <Link to={"/"} className="flex items-center gap-3 group shrink-0">
+            <div className="w-10 h-10 bg-linear-to-br from-indigo-600 to-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-200 group-hover:scale-105 transition-transform">
+              <span className="text-white font-black tracking-tighter text-lg">
+                FS
+              </span>
             </div>
-            <span className="hidden sm:block text-xl font-bold text-gray-900">Fore Site</span>
+            <span className="hidden sm:block text-2xl font-black text-slate-900 tracking-tight">
+              ForeSite
+            </span>
           </Link>
 
-          {/* Center: Navigation Links */}
-          <div className="hidden md:flex items-center gap-8">
-            <Link to="/all-properties" className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200">Property</Link>
-            <Link to="/roi-calculator" className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200">ROI Calculator</Link>
-            <Link to="/about" className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200">About</Link>
-            <Link to="/contact" className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200">Contact</Link>
+          {/* Center: Navigation Links Desktop */}
+          <div className="hidden md:flex items-center gap-1">
+            {navLinks.map((link) => (
+              <Link
+                key={link.name}
+                to={link.path}
+                className="px-4 py-2 text-sm font-bold text-slate-500 hover:text-indigo-600 hover:bg-indigo-50/50 rounded-lg transition-all duration-200"
+              >
+                {link.name}
+              </Link>
+            ))}
           </div>
 
-          {/* Right Side: User Menu */}
-          <div className="relative">
-            <button
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors duration-200 group"
-            >
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
-                <span className="text-white text-sm font-semibold">
-                    {user?.name?.split(" ")[0][0]}
-                </span>
-              </div>
-              <div className="hidden sm:block">
-                <p className="text-sm font-semibold text-gray-900 text-left">{user.name}</p>
-              </div>
-              <ChevronDown
-                size={16}
-                className={`text-gray-600 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`}
-              />
-            </button>
+          {/* Right Side: Auth / User Menu / Mobile Toggle */}
+          <div className="flex items-center gap-4">
+            {/* Desktop User Menu */}
+            <div className="hidden md:block">
+              {user ? (
+                <div className="relative">
+                  <button
+                    onMouseEnter={() => setIsDropdownOpen(true)}
+                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                    className="flex items-center gap-3 px-3 py-2 rounded-xl border border-transparent hover:border-slate-200 hover:bg-slate-50 transition-all duration-200 group"
+                  >
+                    <div className="w-9 h-9 bg-linear-to-br from-indigo-100 to-indigo-200 rounded-full flex items-center justify-center shadow-inner">
+                      <span className="text-indigo-700 text-sm font-black uppercase">
+                        {user?.name?.charAt(0)}
+                      </span>
+                    </div>
+                    <div className="hidden lg:block text-left">
+                      <p className="text-sm font-extrabold text-slate-900 leading-none">
+                        {user.name}
+                      </p>
+                      <p className="text-[0.65rem] font-bold text-slate-500 uppercase tracking-widest mt-0.5 whitespace-nowrap">
+                        {user.role}
+                      </p>
+                    </div>
+                    <ChevronDown
+                      size={16}
+                      className={`text-slate-400 group-hover:text-indigo-600 transition-transform duration-300 ${isDropdownOpen ? "rotate-180" : ""}`}
+                    />
+                  </button>
 
-            {/* Dropdown Menu */}
-            {isDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
-                <button onClick={()=>handleProfile(user)} className="w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-50 flex items-center gap-2 transition-colors duration-150">
-                  <User size={16} />
-                  <span>My Profile</span>
-                </button>
-                {
-                  user.role !== "admin" && (
-                    <Link to="/settings" className="w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-50 flex items-center gap-2 transition-colors duration-150">
-                  <Settings size={16} />
-                  <span>Setting</span>
-                </Link>
-                  )
-                }
-                <hr className="my-1" />
-                <button onClick={()=>dispatch(logoutUser())} className="w-full px-4 py-2 text-left text-red-600 hover:bg-red-50 flex items-center gap-2 transition-colors duration-150">
-                  <LogOut size={16} />
-                  <span>Sign Out</span>
-                </button>
-              </div>
-            )}
+                  <AnimatePresence>
+                    {isDropdownOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                        onMouseLeave={() => setIsDropdownOpen(false)}
+                        className="absolute right-0 mt-3 w-56 bg-white rounded-2xl shadow-2xl border border-slate-100 py-2 z-50 transform origin-top-right transition-all"
+                      >
+                        <button
+                          onClick={() => handleProfile(user)}
+                          className="w-full px-4 py-2.5 text-left text-sm font-bold text-slate-600 hover:text-indigo-600 hover:bg-indigo-50/50 flex items-center gap-3 transition-colors"
+                        >
+                          <User size={16} className="text-slate-400" />
+                          <span>Command Center</span>
+                        </button>
+
+                        {user.role !== "admin" && (
+                          <Link
+                            to="/settings"
+                            className="w-full px-4 py-2.5 text-left text-sm font-bold text-slate-600 hover:text-indigo-600 hover:bg-indigo-50/50 flex items-center gap-3 transition-colors"
+                          >
+                            <Settings size={16} className="text-slate-400" />
+                            <span>Settings</span>
+                          </Link>
+                        )}
+
+                        <div className="h-px bg-slate-100 my-1 mx-4" />
+
+                        <button
+                          onClick={() => {
+                            dispatch(logoutUser());
+                            setIsDropdownOpen(false);
+                          }}
+                          className="w-full px-4 py-2.5 text-left text-sm font-bold text-rose-600 hover:bg-rose-50 flex items-center gap-3 transition-colors"
+                        >
+                          <LogOut size={16} className="text-rose-400" />
+                          <span>Disconnect</span>
+                        </button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              ) : (
+                <div className="flex items-center gap-4">
+                  <Link
+                    to="/login"
+                    className="text-sm font-bold text-slate-600 hover:text-indigo-600 transition-colors"
+                  >
+                    Sign In
+                  </Link>
+                  <Link
+                    to="/register"
+                    className="bg-slate-900 hover:bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-md shadow-slate-900/10 hover:shadow-indigo-600/25 transition-all transform hover:-translate-y-0.5"
+                  >
+                    Create Account
+                  </Link>
+                </div>
+              )}
+            </div>
+
+            {/* Mobile Menu Toggle */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden p-2.5 rounded-xl bg-slate-50 text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-all border border-slate-100"
+            >
+              {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
           </div>
         </div>
       </div>
-    </nav>
-    ) : (
-      <nav className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            {/* Left side - Logo */}
-            <div className="flex-shrink-0 flex items-center flex-1">
-              <Link to="/" className="flex items-center gap-2">
-                <TrendingUp className="h-8 w-8 text-blue-600" />
-                <span className="text-xl font-bold text-gray-900">ForeSite</span>
-              </Link>
-            </div>
-            
-            {/* Center - Navigation Links */}
-            <div className="hidden sm:flex sm:space-x-8 justify-center">
-              <Link
-                to="/all-properties"
-                className="relative group text-gray-500 hover:text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium transition-colors"
-              >
-                Property
-                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out origin-left"></span>
-              </Link>
-              <Link
-                className="relative group text-gray-500 hover:text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium transition-colors"
-              >
-                About
-                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out origin-left"></span>
-              </Link>
-              <Link
-                to="/contact"
-                className="relative group text-gray-500 hover:text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium transition-colors"
-              >
-                Contact
-                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out origin-left"></span>
-              </Link>
-            </div>
 
-            {/* Right side - Login button */}
-            <div className="flex items-center justify-end flex-1">
-              <div className="ml-4 flex items-center md:ml-6">
-                <Link
-                  to="/login"
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
-                >
-                  Login
-                </Link>
+      {/* Mobile Menu Overlay */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="md:hidden bg-white border-t border-slate-100 overflow-hidden"
+          >
+            <div className="px-4 py-6 space-y-4">
+              {/* Profile Card if Logged In */}
+              {user && (
+                <div className="flex items-center gap-4 px-4 py-3 bg-slate-50 rounded-2xl border border-slate-100 mb-6">
+                  <div className="w-12 h-12 bg-linear-to-br from-indigo-500 to-blue-600 rounded-full flex items-center justify-center text-white font-black text-lg">
+                    {user?.name?.charAt(0)}
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-black text-slate-900 leading-tight">
+                      {user.name}
+                    </h4>
+                    <span className="text-[0.6rem] font-bold text-slate-500 uppercase tracking-widest">
+                      {user.role}
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {/* Mobile Links */}
+              <div className="grid grid-cols-1 gap-2">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.name}
+                    to={link.path}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-all group"
+                  >
+                    <span>{link.name}</span>
+                    <motion.div
+                      whileHover={{ x: 3 }}
+                      transition={{ type: "spring", stiffness: 400 }}
+                    >
+                      <ChevronDown
+                        size={14}
+                        className="-rotate-90 text-slate-300 group-hover:text-indigo-400"
+                      />
+                    </motion.div>
+                  </Link>
+                ))}
+              </div>
+
+              {/* Mobile Actions */}
+              <div className="pt-6 border-t border-slate-100 space-y-3">
+                {user ? (
+                  <>
+                    <button
+                      onClick={() => handleProfile(user)}
+                      className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-indigo-50 text-indigo-700 font-bold text-sm"
+                    >
+                      <User size={18} />
+                      <span>Dashboard</span>
+                    </button>
+                    <button
+                      onClick={() => {
+                        dispatch(logoutUser());
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-rose-50 text-rose-600 font-bold text-sm"
+                    >
+                      <LogOut size={18} />
+                      <span>Disconnect</span>
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      to="/login"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="block w-full text-center py-3.5 rounded-xl font-bold text-sm text-slate-600 bg-slate-50 hover:bg-slate-100 transition-colors"
+                    >
+                      Sign In
+                    </Link>
+                    <Link
+                      to="/register"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="block w-full text-center py-3.5 rounded-xl font-bold text-sm text-white bg-slate-900 hover:bg-indigo-600 shadow-lg shadow-indigo-600/10 transition-all"
+                    >
+                      Create Account
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
-          </div>
-        </div>
-      </nav>
-    )
-  )
-}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </nav>
+  );
+};
 
-export default NavBar
+export default NavBar;

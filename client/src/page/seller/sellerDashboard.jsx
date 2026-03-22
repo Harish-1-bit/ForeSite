@@ -20,6 +20,7 @@ import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 
 export default function SellerDashboard() {
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const { user } = useSelector((state) => state.auth);
     const { allProperties, allInquiry, sellerLoading, sellerError, sellerMessage } = useSelector((state) => state.seller);
     const dispatch = useDispatch();
@@ -84,28 +85,39 @@ export default function SellerDashboard() {
     const RecentInquiries = allInquiry?.slice(0, 5) || [];
 
     return (
-        <div className="flex h-screen bg-[#F8FAFC]">
-            <SellerSidebar />
+        <div className="flex h-screen bg-[#F8FAFC] overflow-hidden">
+            <SellerSidebar 
+                isOpen={isSidebarOpen} 
+                onClose={() => setIsSidebarOpen(false)} 
+            />
 
-            <div className="flex-1 overflow-auto">
-                <header className="bg-white border-b border-gray-200 sticky top-0 z-30 shadow-sm">
-                    <div className="flex items-center justify-between px-6 py-4">
-                        <div className="flex items-center gap-3 bg-gray-50 px-3 py-2 rounded-lg border border-gray-200 w-80 focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:border-blue-500 transition-all">
-                            <Search className="w-4 h-4 text-gray-400" />
-                            <input
-                                type="text"
-                                placeholder="Search here..."
-                                className="bg-transparent border-none outline-none text-sm w-full placeholder:text-gray-400 text-gray-700"
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                            />
+            <div className="flex-1 overflow-auto flex flex-col h-full">
+                <header className="bg-white border-b border-gray-200 sticky top-0 z-30 shadow-sm shrink-0">
+                    <div className="flex items-center justify-between px-4 sm:px-6 py-4">
+                        <div className="flex items-center gap-4">
+                            <button
+                                onClick={() => setIsSidebarOpen(true)}
+                                className="md:hidden p-2 rounded-lg bg-slate-50 text-slate-600 hover:bg-blue-50 hover:text-blue-600 transition-all border border-slate-100"
+                            >
+                                <Plus size={20} className="rotate-45" /> 
+                            </button>
+                            <div className="flex items-center gap-3 bg-gray-50 px-3 py-2 rounded-lg border border-gray-200 w-40 sm:w-80 focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:border-blue-500 transition-all">
+                                <Search className="w-4 h-4 text-gray-400 shrink-0" />
+                                <input
+                                    type="text"
+                                    placeholder="Search..."
+                                    className="bg-transparent border-none outline-none text-sm w-full placeholder:text-gray-400 text-gray-700"
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                />
+                            </div>
                         </div>
 
                         <div className="flex items-center gap-3">
-                            <div className="h-8 w-px bg-gray-200 mx-1"></div>
+                            <div className="h-8 w-px bg-gray-200 mx-1 hidden sm:block"></div>
                             <div className="flex items-center gap-2 pl-1">
-                                <span className="text-sm font-medium text-gray-700">{user?.name}</span>
-                                <div className="w-9 h-9 rounded-full bg-linear-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white font-semibold shadow-md ring-2 ring-white">
+                                <span className="text-sm font-bold text-gray-700 hidden sm:block">{user?.name}</span>
+                                <div className="w-9 h-9 rounded-xl bg-linear-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white font-black shadow-lg shadow-blue-200">
                                     {user?.name?.charAt(0).toUpperCase()}
                                 </div>
                             </div>

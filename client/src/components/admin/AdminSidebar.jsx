@@ -1,67 +1,163 @@
-import { Home } from 'lucide-react';
-import React from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import {
+  Home,
+  LayoutDashboard,
+  Building2,
+  Users,
+  X,
+  ShieldCheck,
+} from "lucide-react";
+import React from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 
-const AdminSidebar = () => {
+const AdminSidebar = ({ isOpen, onClose }) => {
   const location = useLocation();
-  console.log(location)
-  return (
-    <div className="w-56 bg-white border-r border-gray-200 flex flex-col">
-        <Link to="/" className="p-6 border-b border-gray-200">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-              <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" />
-              </svg>
-            </div>
-            <div>
-              <div className="font-bold text-gray-900 text-sm">Fore Site Admin</div>
+  const navigate = useNavigate();
 
+  const menuItems = [
+    {
+      path: "/admin/dashboard",
+      label: "Dashboard",
+      icon: LayoutDashboard,
+    },
+    {
+      path: "/admin/property-management",
+      label: "Property Management",
+      icon: Building2,
+    },
+    {
+      path: "/admin/user-management",
+      label: "User Management",
+      icon: Users,
+    },
+  ];
+
+  const SidebarContent = () => (
+    <div className="h-full bg-white border-r border-slate-200 flex flex-col w-64 md:w-56">
+      {/* Logo */}
+      <div className="p-6 border-b border-slate-100 flex items-center justify-between">
+        <Link
+          to="/"
+          className="flex items-center gap-3 group"
+          onClick={() => onClose?.()}
+        >
+          <div className="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center text-white font-black text-lg shadow-lg shadow-slate-200 group-hover:scale-105 transition-transform">
+            FS
+          </div>
+          <div>
+            <div className="text-sm font-black text-slate-900 leading-tight">
+              ForeSite
+            </div>
+            <div className="text-[0.6rem] font-bold text-slate-400 uppercase tracking-widest">
+              Admin Terminal
             </div>
           </div>
         </Link>
+        <button
+          onClick={onClose}
+          className="md:hidden p-2 rounded-lg hover:bg-slate-50 text-slate-400 transition-colors"
+        >
+          <X size={20} />
+        </button>
+      </div>
 
-        {/* Navigation */}
-        <nav className="flex-1 p-4 space-y-2">
-          <Link to="/admin/dashboard" className={`px-4 py-3 ${location.pathname === "/admin/dashboard" ? "bg-blue-50 rounded-lg border border-blue-200" : "text-gray-700 hover:bg-gray-100 rounded-lg border border-gray-200"} flex items-center gap-3 cursor-pointer transition`}>
-            <svg className={`w-5 h-5 ${location.pathname === "/admin/dashboard" ? "text-blue-600" : "text-gray-600"}`} fill="currentColor" viewBox="0 0 20 20">
-              <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" />
-            </svg>
-            <span className={`text-sm font-medium ${location.pathname === "/admin/dashboard" ? "text-blue-600" : "text-gray-600"}`}>Dashboard</span>
-          </Link>
-
-          <Link to="/admin/property-management" className={`px-4 py-3 ${location.pathname === "/admin/property-management" ? "bg-blue-50 rounded-lg border border-blue-200" : "text-gray-700 hover:bg-gray-100 rounded-lg border border-gray-200"} flex items-center gap-3 cursor-pointer transition`}>
-            <svg className={`w-5 h-5 ${location.pathname === "/admin/property-management" ? "text-blue-600" : "text-gray-600"}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z" />
-            </svg>
-            <span className={`text-sm font-medium ${location.pathname === "/admin/property-management" ? "text-blue-600" : "text-gray-600"}`}>Property Management</span>
-          </Link>
-
-          <Link to="/admin/user-management" className={`px-4 py-3 ${location.pathname === "/admin/user-management" ? "bg-blue-50 rounded-lg border border-blue-200" : "text-gray-700 hover:bg-gray-100 rounded-lg border border-gray-200"} flex items-center gap-3 cursor-pointer transition`}>
-            <svg className={`w-5 h-5 ${location.pathname === "/admin/user-management" ? "text-blue-600" : "text-gray-600"}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 12H9m6 0a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-            <span className={`text-sm font-medium ${location.pathname === "/admin/user-management" ? "text-blue-600" : "text-gray-600"}`}>User Management</span>
-          </Link>
-
-      
-
-          <Link to="/" className={`px-4 py-3 ${location.pathname === "/admin/system-settings" ? "bg-blue-50 rounded-lg border border-blue-200" : "text-gray-700 hover:bg-gray-100 rounded-lg border border-gray-200"} flex items-center gap-3 cursor-pointer transition`}>
-            <Home/>
-            <span className={`text-sm font-medium ${location.pathname === "/admin/system-settings" ? "text-blue-600" : "text-gray-600"}`}>Go Back</span>
-          </Link>
+      {/* Navigation */}
+      <div className="flex-1 py-8 px-4 overflow-y-auto">
+        <div className="text-[0.65rem] font-bold text-slate-400 uppercase tracking-widest px-4 mb-4">
+          Control Panel
+        </div>
+        <nav className="space-y-1.5">
+          {menuItems.map((item) => {
+            const isActive = location.pathname === item.path;
+            const Icon = item.icon;
+            return (
+              <Link
+                key={item.path}
+                to={item.path}
+                onClick={() => onClose?.()}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all duration-200 ${
+                  isActive
+                    ? "bg-slate-900 text-white shadow-lg shadow-slate-200"
+                    : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                }`}
+              >
+                <Icon
+                  size={18}
+                  className={isActive ? "text-white" : "text-slate-400"}
+                />
+                <span>{item.label}</span>
+              </Link>
+            );
+          })}
         </nav>
 
-        {/* System Status */}
-        <div className="p-4 border-t border-gray-200">
-          <div className="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-3">System Status</div>
+        <div className="mt-10 text-[0.65rem] font-bold text-slate-400 uppercase tracking-widest px-4 mb-4">
+          Navigation
+        </div>
+        <Link
+          to="/"
+          onClick={() => onClose?.()}
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200"
+        >
+          <Home size={18} className="text-slate-400" />
+          <span>Exit Admin</span>
+        </Link>
+      </div>
+
+      {/* System Status */}
+      <div className="p-4 border-t border-slate-100">
+        <div className="bg-slate-50 rounded-2xl p-4 border border-slate-100">
+          <div className="flex items-center gap-2 mb-2">
+            <ShieldCheck size={14} className="text-emerald-500" />
+            <span className="text-[0.65rem] font-bold text-slate-500 uppercase tracking-widest">
+              Core Status
+            </span>
+          </div>
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-            <span className="text-sm text-gray-700">AI Engine Online</span>
+            <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+            <span className="text-xs font-bold text-slate-700">
+              AI Engine Online
+            </span>
           </div>
         </div>
       </div>
-  )
-}
+    </div>
+  );
 
-export default AdminSidebar
+  return (
+    <>
+      {/* Desktop Sidebar */}
+      <div className="hidden md:flex shrink-0">
+        <SidebarContent />
+      </div>
+
+      {/* Mobile Sidebar */}
+      <AnimatePresence>
+        {isOpen && (
+          <div className="fixed inset-0 z-50 md:hidden">
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={onClose}
+              className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
+            />
+            {/* Drawer */}
+            <motion.div
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="absolute inset-y-0 left-0"
+            >
+              <SidebarContent />
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+};
+
+export default AdminSidebar;

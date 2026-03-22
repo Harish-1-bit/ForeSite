@@ -28,7 +28,10 @@ export function ROICalculator() {
     if (customerLoading || roi) {
       // Small delay to ensure the DOM has updated and element is visible
       setTimeout(() => {
-        resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+        resultsRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
       }, 100);
     }
   }, [customerLoading, roi]);
