@@ -79,28 +79,51 @@ export default function UserDetail({ user, isOpen, onClose }) {
         </div>
 
         {/* Footer Actions */}
-        <div className="flex items-center justify-between gap-4 p-8 border-t border-gray-200 bg-gray-50">
-          {
-            user.isActive ? (
-              <button onClick={() => handleUpdateUser({ id: user._id, isActive: false })} className="text-red-600 font-semibold flex items-center gap-2 hover:text-red-700">
-                <BadgeAlert/>
-                Suspend Account
-              </button>
-            ) : (
-              <button onClick={() => handleUpdateUser({ id: user._id, isActive: true })} className="text-green-600 font-semibold flex items-center gap-2 hover:text-green-700">
-                <ShieldCheck/>
-                Activate Account
-              </button>
-            )
-          }
-          <div className="flex gap-4">
-            <button
-              onClick={onClose}
-              className="px-6 py-2 text-gray-700 font-medium hover:bg-gray-100 rounded-lg transition-colors"
-            >
-              Close
-            </button>
+        <div className="p-8 border-t border-gray-200 bg-slate-50 flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-4 w-full sm:w-auto">
+            <div className="flex-1 sm:flex-none">
+              <p className="text-[0.65rem] font-bold text-slate-400 uppercase tracking-widest mb-2">Management Actions</p>
+              <div className="flex items-center gap-2">
+                {user.isActive ? (
+                  <button 
+                    onClick={() => handleUpdateUser({ id: user._id, isActive: false })} 
+                    className="flex items-center gap-2 px-4 py-2 bg-rose-50 border border-rose-100 text-rose-600 rounded-xl text-sm font-bold hover:bg-rose-100 transition-colors"
+                  >
+                    <BadgeAlert size={16} />
+                    Suspend
+                  </button>
+                ) : (
+                  <button 
+                    onClick={() => handleUpdateUser({ id: user._id, isActive: true })} 
+                    className="flex items-center gap-2 px-4 py-2 bg-emerald-50 border border-emerald-100 text-emerald-600 rounded-xl text-sm font-bold hover:bg-emerald-100 transition-colors"
+                  >
+                    <ShieldCheck size={16} />
+                    Activate
+                  </button>
+                )}
+              </div>
+            </div>
+
+            <div className="flex-1 sm:flex-none">
+              <p className="text-[0.65rem] font-bold text-slate-400 uppercase tracking-widest mb-2">Change Role</p>
+              <select
+                value={user.role}
+                onChange={(e) => handleUpdateUser({ id: user._id, role: e.target.value })}
+                className="w-full sm:w-32 bg-white border border-slate-200 text-slate-900 text-sm font-bold rounded-xl px-3 py-2 focus:ring-2 focus:ring-slate-900/5 focus:border-slate-900 transition-all outline-none"
+              >
+                <option value="customer">Customer</option>
+                <option value="seller">Seller</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
           </div>
+
+          <button
+            onClick={onClose}
+            className="w-full sm:w-auto px-8 py-2.5 bg-slate-900 text-white rounded-xl text-sm font-bold shadow-lg shadow-slate-200 hover:bg-slate-800 transition-all"
+          >
+            Close Profile
+          </button>
         </div>
       </div>
     </div>

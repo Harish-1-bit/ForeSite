@@ -6,11 +6,7 @@ import { aiResponse, roiCalculation } from "../middleware/aiOpenSource.js";
 
 const getAllProperty = async (req, res) => {
   const property = await Property.find().populate("owner");
-  if (!property) {
-    res.status(404);
-    throw new Error("No Property found");
-  }
-  res.status(200).json(property);
+  res.status(200).json(property || []);
 };
 
 const getSingleProperty = async (req, res) => {
@@ -173,7 +169,7 @@ const getPriceHistory = async (req, res) => {
   const { pid } = req.params;
   const priceChange = await PriceChange.find({ property: pid }).populate(
     "property",
-  ).populate;
+  );
   if (priceChange.length === 0) {
     res.status(404);
     throw new Error("Property not found");
