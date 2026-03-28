@@ -25,7 +25,7 @@ export default function UserManagement() {
     setOpenModal(true);
   };
 
-  const filteredUsers = (allUser || []).filter(user => {
+  const filteredUsers = (Array.isArray(allUser) ? allUser : []).filter(user => {
     const matchesSearch = user?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       user?.email?.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesRole = selectedRole === "all" || user?.role?.toLowerCase() === selectedRole.toLowerCase();
@@ -58,8 +58,11 @@ export default function UserManagement() {
     if (adminError && adminMessage) {
       toast.error(adminMessage);
     }
+  }, [adminError, adminMessage]);
+
+  useEffect(() => {
     dispatch(getAllUser());
-  }, [adminError, adminMessage, dispatch]);
+  }, [dispatch]);
 
   if (adminLoading) {
     return <LoaderScreen />;
