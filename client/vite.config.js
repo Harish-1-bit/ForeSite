@@ -8,7 +8,7 @@ export default defineConfig({
   server:{
     proxy:{
       '/api':{
-        target:"https://foresite-1.onrender.com/",
+        target:"https://foresite-1.onrender.com",
         changeOrigin:true,
         secure:false, 
       }
