@@ -1,4 +1,4 @@
-import axios from "axios";
+import API from "../../api/axios";
 
 const getAllUser = async (token) => {
   let option = {
@@ -6,12 +6,12 @@ const getAllUser = async (token) => {
       Authorization: `Bearer ${token}`,
     },
   };
-  const response = await axios.get("/api/admin", option);
+  const response = await API.get("/api/admin", option);
   return response.data;
 };
 
 const getAllProperties = async () => {
-  const response = await axios.get("/api/property");
+  const response = await API.get("/api/property");
   return response.data;
 };
 
@@ -22,7 +22,7 @@ const updateUser = async (token, data) => {
     },
   };
   console.log(data.id);
-  const response = await axios.put(`/api/admin/${data.id}`, data, option);
+  const response = await API.put(`/api/admin/${data.id}`, data, option);
   console.log(response.data);
   return response.data;
 };

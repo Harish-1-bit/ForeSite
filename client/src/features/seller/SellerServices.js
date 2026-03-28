@@ -1,4 +1,4 @@
-import axios from "axios";
+import API from "../../api/axios";
 
 const getAllsellerProperties = async (token) => {
   let option = {
@@ -6,7 +6,7 @@ const getAllsellerProperties = async (token) => {
       Authorization: `Bearer ${token}`,
     },
   };
-  const response = await axios.get("/api/property/seller/property", option);
+  const response = await API.get("/api/property/seller/property", option);
   return response.data;
 };
 
@@ -16,7 +16,7 @@ const getAllInquiry = async (token) => {
       Authorization: `Bearer ${token}`,
     },
   };
-  const response = await axios.get("/api/enquiry/all", option);
+  const response = await API.get("/api/enquiry/all", option);
   return response.data;
 };
 
@@ -27,7 +27,7 @@ const addProperty = async (token, propertyData) => {
     },
   };
   console.log(propertyData);
-  const response = await axios.post("/api/property", propertyData, option);
+  const response = await API.post("/api/property", propertyData, option);
   return response.data;
 };
 
@@ -38,7 +38,7 @@ const updateProperty = async (token, id, propertyData) => {
     },
   };
   console.log(propertyData);
-  const response = await axios.put(`/api/property/${id}`, propertyData, option);
+  const response = await API.put(`/api/property/${id}`, propertyData, option);
   console.log(response.data);
   return response.data;
 };
@@ -50,7 +50,7 @@ const updateEnquiry = async (token, enquiry) => {
     },
   };
   console.log(enquiry);
-  const response = await axios.put(
+  const response = await API.put(
     "/api/enquiry/update/" + enquiry._id,
     enquiry,
     option,
