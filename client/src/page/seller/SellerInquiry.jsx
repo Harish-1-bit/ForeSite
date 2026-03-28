@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import SellerSidebar from '../../components/seller/sellerSidebar';
+import SellerSidebar from '../../components/seller/SellerSidebar';
 import { useDispatch, useSelector } from 'react-redux';
 import { 
   Search, 

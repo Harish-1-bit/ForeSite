@@ -8,7 +8,7 @@ import AdminDashboard from "./page/Admin/Admindashboard";
 import PropertyManagement from "./page/Admin/PropertyManagement";
 import UserManagement from "./page/Admin/UserManagement";
 import PrivateComponent from "./components/PrivateComponent";
-import SellerDashboard from "./page/seller/sellerDashboard";
+import SellerDashboard from "./page/seller/SellerDashboard";
 import SellerListing from "./page/seller/SellerListing";
 import SellerInquiry from "./page/seller/SellerInquiry";
 import { AllProperties } from "./page/AllProperties";
