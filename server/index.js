@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import express from "express";
 import colors from "colors";
+import cors from "cors";
 import connectDb from "./dbconfig/dbConfig.js";
 import authRouter from "./routes/authRouter.js";
 import errorhandler from "../ErrorHandler/errorHandler.js";
@@ -12,19 +13,21 @@ import enquiryRoute from "./routes/enquiryRoute.js";
 
 dotenv.config()
 const app = express()
+
+// CORS configuration
+app.use(cors({
+  origin: [
+    "http://localhost:5173", 
+    "https://foresite.soniharish029.workers.dev",
+    "https://foresite.pages.dev" // Adding common Pages domain just in case
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}))
+
 const port = process.env.PORT
 
 connectDb()
-
-import cors from "cors";
-
-app.use(cors({
-  origin: "*", 
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-}));
-
-app.options("*", cors()); 
 
 app.get('/',(req, res) => {
   res.status(200).json({
