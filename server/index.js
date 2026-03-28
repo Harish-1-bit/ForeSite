@@ -18,7 +18,7 @@ connectDb()
 
 app.get('/',(req, res) => {
   res.status(200).json({
-    message: "Welcome to Indore - Bazar API 1.0",
+    message: "Welcome to Fore Site",
   });
 })
 
