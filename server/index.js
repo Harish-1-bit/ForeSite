@@ -16,6 +16,16 @@ const port = process.env.PORT
 
 connectDb()
 
+import cors from "cors";
+
+app.use(cors({
+  origin: "*", 
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+}));
+
+app.options("*", cors()); 
+
 app.get('/',(req, res) => {
   res.status(200).json({
     message: "Welcome to Fore Site",
