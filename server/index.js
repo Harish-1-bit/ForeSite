@@ -19,7 +19,8 @@ app.use(cors({
   origin: [
     "http://localhost:5173", 
     "https://foresite.soniharish029.workers.dev",
-    "https://foresite.pages.dev" // Adding common Pages domain just in case
+    "https://foresite.pages.dev",
+    'https://fore-site.vercel.app'// Adding common Pages domain just in case
   ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
