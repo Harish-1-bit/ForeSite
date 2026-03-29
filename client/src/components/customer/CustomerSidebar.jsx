@@ -97,35 +97,7 @@ const CustomerSidebar = ({ isOpen, onClose }) => {
           })}
         </nav>
 
-        <div className="mt-10 text-[0.65rem] font-bold text-slate-400 uppercase tracking-widest px-4 mb-4">
-          System
-        </div>
-        <nav className="space-y-1.5">
-          {configItems.map((item) => {
-            const isActive = location.pathname === item.href;
-            return (
-              <button
-                key={item.id}
-                onClick={() => {
-                  if (item.href) {
-                    navigate(item.href);
-                    onClose?.();
-                  }
-                }}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all duration-200 ${
-                  isActive
-                    ? "bg-indigo-600 text-white shadow-lg shadow-indigo-200"
-                    : "text-slate-600 hover:bg-slate-50 hover:text-indigo-600"
-                }`}
-              >
-                <span className={isActive ? "text-white" : "text-slate-400"}>
-                  {item.icon}
-                </span>
-                <span>{item.label}</span>
-              </button>
-            );
-          })}
-        </nav>
+
       </div>
 
       {/* User Profile */}
