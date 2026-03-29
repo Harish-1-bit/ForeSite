@@ -1,4 +1,4 @@
-import puter from "@heyputer/puter.js";
+// Removed Puter dependency to enforce strictly NVIDIA backend
 import axios from "axios";
 
 function parseModelJson(content, res) {
@@ -87,26 +87,12 @@ Inputs (may be objects/arrays; extract what you can without guessing):
 - Property object: ${text?.property ?? "Not provided"}
 - Price change array: ${text?.priceChange ?? "Not Available"}`;
 
-    const provider = process.env.AI_PROVIDER || "puter";
-    let content = "";
-
-    if (provider === "nvidia" && process.env.NVIDIA_API_KEY) {
-      const response = await callNvidiaApi(text ? prompt : "");
-      content = response?.choices?.[0]?.message?.content || "";
-    } else {
-      if (process.env.PUTER_TOKEN) {
-        puter.setAuthToken(process.env.PUTER_TOKEN);
-      }
-      const aiRes = await puter.ai.chat(text ? prompt : "", {
-        model: "claude-3-5-sonnet",
-      });
-      content =
-        aiRes?.message?.content?.[0]?.text ||
-        aiRes?.message ||
-        aiRes?.text ||
-        aiRes?.toString() ||
-        "";
+    if (!process.env.NVIDIA_API_KEY) {
+      throw new Error("SERVER MISCONFIGURATION: NVIDIA_API_KEY is missing from environment variables.");
     }
+
+    const response = await callNvidiaApi(text ? prompt : "");
+    const content = response?.choices?.[0]?.message?.content || "";
 
     const parsed = parseModelJson(content);
 
@@ -225,25 +211,12 @@ Return JSON in EXACTLY this shape:
   "missingDataWarnings": ["Identify any crucial missing inputs"]
 }`;
 
-    const provider = process.env.AI_PROVIDER || "puter";
-    let content = "";
-
-    if (provider === "nvidia" && process.env.NVIDIA_API_KEY) {
-      const response = await callNvidiaApi(prompt);
-      content = response?.choices?.[0]?.message?.content || "";
-    } else {
-      if (process.env.PUTER_TOKEN) {
-        puter.setAuthToken(process.env.PUTER_TOKEN);
-      }
-      const aiRes = await puter.ai.chat(prompt, { model: "claude-3-5-sonnet" });
-
-      content =
-        aiRes?.message?.content?.[0]?.text ||
-        aiRes?.message ||
-        aiRes?.text ||
-        aiRes?.toString() ||
-        "";
+    if (!process.env.NVIDIA_API_KEY) {
+      throw new Error("SERVER MISCONFIGURATION: NVIDIA_API_KEY is missing from environment variables. Please add it to your Render dashboard.");
     }
+
+    const response = await callNvidiaApi(prompt);
+    const content = response?.choices?.[0]?.message?.content || "";
     
     const parsed = parseModelJson(content);
 
