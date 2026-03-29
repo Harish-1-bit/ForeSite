@@ -60,12 +60,14 @@ export default function Register() {
         
         {/* Content */}
         <div className="relative z-20 flex flex-col justify-between p-16 w-full text-white">
-          <motion.div initial={{opacity:0, x:-20}} animate={{opacity:1, x:0}} transition={{duration: 0.8}} className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-2xl">
-              <span className="text-2xl font-black text-indigo-600 tracking-tighter">FS</span>
-            </div>
-            <span className="text-3xl font-black tracking-tight">ForeSite</span>
-          </motion.div>
+          <Link to="/">
+            <motion.div initial={{opacity:0, x:-20}} animate={{opacity:1, x:0}} transition={{duration: 0.8}} className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-2xl">
+                <span className="text-2xl font-black text-indigo-600 tracking-tighter">FS</span>
+              </div>
+              <span className="text-3xl font-black tracking-tight text-white">ForeSite</span>
+            </motion.div>
+          </Link>
 
           <motion.div variants={containerVariants} initial="hidden" animate="visible" className="max-w-xl">
             <motion.h1 variants={itemVariants} className="text-5xl md:text-6xl font-black leading-[1.1] mb-6 tracking-tight">
