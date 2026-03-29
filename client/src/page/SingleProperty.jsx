@@ -544,11 +544,6 @@ const SingleProperty = () => {
           </div>
         </div>
       )}
-      <EnquiryModal 
-        isOpen={isEnquiryOpen} 
-        onClose={() => setIsEnquiryOpen(false)} 
-        property={singleProperty.property}
-      />
     </div>
   );
 };

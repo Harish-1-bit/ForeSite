@@ -118,7 +118,7 @@ export const getPropertiesCustomer = createAsyncThunk(
     try {
       return await customerService.getPropertiesCustomer();
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data.message);
+      return thunkAPI.rejectWithValue(error.response?.data?.message || error.message || "Failed to fetch properties");
     }
   },
 );
@@ -131,7 +131,7 @@ export const getSingleProperty = createAsyncThunk(
     try {
       return await customerService.getSingleProperty(token, pid);
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data.message);
+      return thunkAPI.rejectWithValue(error.response?.data?.message || error.message || "Failed to fetch property details");
     }
   },
 );
@@ -143,7 +143,7 @@ export const aiResponse = createAsyncThunk(
     try {
       return await customerService.aiResponse(token, pid);
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data.message);
+      return thunkAPI.rejectWithValue(error.response?.data?.message || error.message || "Failed to fetch AI response");
     }
   },
 );
