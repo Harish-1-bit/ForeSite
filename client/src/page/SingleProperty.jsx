@@ -32,6 +32,7 @@ const SingleProperty = () => {
     customerMessage,
     aiLoading,
   } = useSelector((state) => state.customer);
+  const { user } = useSelector((state) => state.auth);
 
   const handleVerifyAIAnalysis = useCallback(() => {
     dispatch(aiResponse(id));
@@ -446,7 +447,14 @@ const SingleProperty = () => {
 
                 <motion.button
                   whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                  onClick={() => setIsEnquiryOpen(true)}
+                  onClick={() => {
+                    if (user) {
+                      setIsEnquiryOpen(true);
+                    } else {
+                      toast.error("please login for making enquerry");
+                      setTimeout(() => navigate("/login"), 1500);
+                    }
+                  }}
                   className="w-full py-4 bg-slate-900 text-white font-black rounded-xl hover:bg-indigo-600 transition-colors shadow-lg shadow-slate-900/10 flex items-center justify-center gap-2"
                 >
                   <IndianRupee size={20} /> Submit Enquiry

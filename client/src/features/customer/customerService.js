@@ -6,9 +6,8 @@ const getPropertiesCustomer = async () => {
 };
 
 const getSingleProperty = async (token, pid) => {
-  const response = await axios.get(`/api/property/${pid}`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
+  const response = await axios.get(`/api/property/${pid}`, config);
   return response.data;
 };
 
