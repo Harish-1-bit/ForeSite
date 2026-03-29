@@ -139,7 +139,8 @@ export const getSingleProperty = createAsyncThunk(
 export const aiResponse = createAsyncThunk(
   "customer/aiResponse",
   async (pid, thunkAPI) => {
-    const token = thunkAPI.getState().auth.user.token;
+    const user = thunkAPI.getState().auth.user;
+    const token = user ? user.token : null;
     try {
       return await customerService.aiResponse(token, pid);
     } catch (error) {

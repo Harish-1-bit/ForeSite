@@ -15,7 +15,7 @@ router.get('/:pid',propertyController.getSingleProperty)
 router.get('/seller/property',authUser,propertyController.getSellerProperties)
 
 // Get AI Response for Single Property
-router.get('/ai-response/:pid',authUser,propertyController.aiResponseSingleProperty)
+router.get('/ai-response/:pid',propertyController.aiResponseSingleProperty)
 
 // Post Property
 router.post('/',authUser,upload.array('propertyImage',5),propertyController.addProperty)

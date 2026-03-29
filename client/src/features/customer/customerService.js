@@ -12,9 +12,8 @@ const getSingleProperty = async (token, pid) => {
 };
 
 const aiResponse = async (token, pid) => {
-  const response = await axios.get(`/api/property/ai-response/${pid}`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
+  const response = await axios.get(`/api/property/ai-response/${pid}`, config);
   return response.data;
 };
 
