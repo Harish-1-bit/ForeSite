@@ -452,7 +452,6 @@ const SingleProperty = () => {
                       setIsEnquiryOpen(true);
                     } else {
                       toast.error("please login for making enquerry");
-                      setTimeout(() => navigate("/login"), 1500);
                     }
                   }}
                   className="w-full py-4 bg-slate-900 text-white font-black rounded-xl hover:bg-indigo-600 transition-colors shadow-lg shadow-slate-900/10 flex items-center justify-center gap-2"
