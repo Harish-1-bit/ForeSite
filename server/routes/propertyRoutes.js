@@ -27,6 +27,6 @@ router.put('/:pid',authUser,upload.array('propertyImage',5),propertyController.u
 router.get('/price-history/:pid',authUser,propertyController.getPriceHistory)
 
 // Calculate ROI
-router.post('/calculate-roi',authUser,propertyController.calculateRoi)
+router.post('/calculate-roi',propertyController.calculateRoi)
 
 export default router

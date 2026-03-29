@@ -178,34 +178,43 @@ const getPriceHistory = async (req, res) => {
 };
 
 const calculateRoi = async (req, res) => {
-  const { propertyPrice, location, holdingYears, maintainCost } = req.body;
-  if (!propertyPrice || isNaN(propertyPrice) || !holdingYears || isNaN(holdingYears) || !location) {
-    res.status(400);
-    throw new Error(
-      "Please Enter valid required details (Number for Property Price and Holding Years, String for Location)",
-    );
-  }
-
-  // Clean empty strings so that ?? falls back to "Not provided" in aiOpenSource
-  const cleanBody = {};
-  for (const key in req.body) {
-    if (req.body[key] !== "") {
-      cleanBody[key] = req.body[key];
+  try {
+    console.log("ROI Request received:", req.body);
+    const { propertyPrice, location, holdingYears, maintainCost } = req.body;
+    if (!propertyPrice || isNaN(propertyPrice) || !holdingYears || isNaN(holdingYears) || !location) {
+      res.status(400);
+      throw new Error(
+        "Please Enter valid required details (Number for Property Price and Holding Years, String for Location)",
+      );
     }
-  }
 
-  const roi = await roiCalculation({
-    propertyPrice,
-    location,
-    maintainCost,
-    holdingYears,
-    ...cleanBody,
-  });
-  if (roi.error) {
-    res.status(429);
-    throw new Error(roi.message);
+    const cleanBody = {};
+    for (const key in req.body) {
+      if (req.body[key] !== "") {
+        cleanBody[key] = req.body[key];
+      }
+    }
+
+    const roi = await roiCalculation({
+      propertyPrice,
+      location,
+      maintainCost,
+      holdingYears,
+      ...cleanBody,
+    });
+    
+    if (roi.error) {
+      console.error("ROI calculation returned error:", roi);
+      res.status(429);
+      throw new Error(roi.message);
+    }
+    
+    console.log("ROI Calculation Success");
+    res.status(200).json(roi);
+  } catch (err) {
+    console.error("ROI Controller caught an error:", err.message);
+    res.status(err.status || 500).json({ message: err.message });
   }
-  res.status(200).json(roi);
 };
 
 const propertyController = {

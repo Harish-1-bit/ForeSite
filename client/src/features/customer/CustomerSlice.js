@@ -150,11 +150,15 @@ export const aiResponse = createAsyncThunk(
 export const calculateRoi = createAsyncThunk(
   "customer/calculateRoi",
   async (data, thunkAPI) => {
-    const token = thunkAPI.getState().auth.user.token;
+    // Make token optional so unauthenticated users can still calculate ROI
+    const user = thunkAPI.getState().auth.user;
+    const token = user ? user.token : null;
+    
     try {
       return await customerService.calculateRoi(token, data);
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data.message);
+      const message = error.response?.data?.message || error.message || "Failed to calculate ROI";
+      return thunkAPI.rejectWithValue(message);
     }
   },
 );
