@@ -4,7 +4,6 @@ import {
   LucideLifeBuoy,
   LucideLineChart,
   LucideMail,
-  LucideSettings,
   User,
   X,
 } from "lucide-react";
@@ -35,15 +34,6 @@ const SellerSidebar = ({ isOpen, onClose }) => {
       label: "Inquiries",
       icon: <LucideMail className="w-4 h-4" />,
       href: "/seller/inquiries",
-    },
-  ];
-
-  const configItems = [
-    {
-      id: "settings",
-      label: "Settings",
-      icon: <LucideSettings className="w-4 h-4" />,
-      href: "/settings",
     },
   ];
 
@@ -104,27 +94,6 @@ const SellerSidebar = ({ isOpen, onClose }) => {
               </button>
             );
           })}
-        </nav>
-
-        <div className="mt-10 text-[0.65rem] font-bold text-slate-400 uppercase tracking-widest px-4 mb-4">
-          Settings
-        </div>
-        <nav className="space-y-1.5">
-          {configItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => {
-                if (item.href) {
-                  navigate(item.href);
-                  onClose?.();
-                }
-              }}
-              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-50 hover:text-blue-600 transition-all duration-200"
-            >
-              <span className="text-slate-400">{item.icon}</span>
-              <span>{item.label}</span>
-            </button>
-          ))}
         </nav>
       </div>
 
