@@ -42,10 +42,13 @@ const SingleProperty = () => {
       dispatch(resetAiResponse());
       dispatch(getSingleProperty(id));
     }
+  }, [dispatch, id]);
+
+  useEffect(() => {
     if (customerError && customerMessage) {
       toast.error(customerMessage);
     }
-  }, [dispatch, id, customerError, customerMessage]);
+  }, [customerError, customerMessage]);
 
   if (customerLoading) {
     return <LoaderScreen />;
