@@ -91,10 +91,14 @@ const CustomerHero = () => {
               <p className="text-xs uppercase tracking-[0.15em] font-bold text-slate-400">
                 Trusted by leading investors
               </p>
-              <div className="flex gap-10 opacity-50 grayscale">
-                <div className="h-6 w-24 bg-slate-400 rounded-sm text-center"></div>
-                <div className="h-6 w-28 bg-slate-400 rounded-sm text-center"></div>
-                <div className="h-6 w-20 bg-slate-400 rounded-sm text-center"></div>
+              <div className="flex flex-wrap items-center gap-8 sm:gap-12 opacity-60 grayscale hover:grayscale-0 transition-all duration-500 cursor-default">
+                <span className="font-serif italic font-bold text-2xl md:text-3xl text-slate-700">Sequoia</span>
+                <span className="font-black tracking-tighter text-2xl md:text-3xl text-slate-800">a16z</span>
+                <span className="font-bold tracking-[0.2em] uppercase text-lg md:text-xl text-slate-900 border-2 border-slate-900 px-2 py-0.5">BLACKROCK</span>
+                <span className="font-black text-2xl md:text-3xl text-slate-800 tracking-tight flex items-center gap-1">
+                  <span className="bg-[#fb651e] text-white w-8 md:w-10 h-8 md:h-10 flex items-center justify-center rounded-sm text-xl md:text-2xl">Y</span>
+                  Combinator
+                </span>
               </div>
             </motion.div>
           </motion.div>
