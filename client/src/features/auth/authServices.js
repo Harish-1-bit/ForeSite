@@ -1,8 +1,8 @@
-import API from "../../api";
+import axios from "axios";
 
 const loginUser = async (user) => {
   console.log(user);
-  const response = await API.post("/api/auth/login", user);
+  const response = await axios.post("/api/auth/login", user);
   localStorage.setItem("user", JSON.stringify(response.data));
   console.log(response.data);
   return response.data;
@@ -10,7 +10,7 @@ const loginUser = async (user) => {
 
 const registerUser = async (user) => {
   console.log(user);
-  const response = await API.post("/api/auth/register", user);
+  const response = await axios.post("/api/auth/register", user);
   localStorage.setItem("user", JSON.stringify(response.data));
   console.log(response.data);
   return response.data;
