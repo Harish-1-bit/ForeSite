@@ -223,7 +223,7 @@ export default function Contact() {
                       name="First Name"
                       required
                       className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl px-5 py-4 text-slate-900 font-medium focus:outline-none focus:border-indigo-500 focus:bg-white transition-all hover:bg-slate-100/50"
-                      placeholder="John"
+                      placeholder="First Name"
                     />
                   </div>
                   <div>
@@ -235,7 +235,7 @@ export default function Contact() {
                       name="Last Name"
                       required
                       className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl px-5 py-4 text-slate-900 font-medium focus:outline-none focus:border-indigo-500 focus:bg-white transition-all hover:bg-slate-100/50"
-                      placeholder="Doe"
+                      placeholder="Last Name"
                     />
                   </div>
                 </div>
@@ -250,7 +250,7 @@ export default function Contact() {
                       name="email"
                       required
                       className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl px-5 py-4 text-slate-900 font-medium focus:outline-none focus:border-indigo-500 focus:bg-white transition-all hover:bg-slate-100/50"
-                      placeholder="john@example.com"
+                      placeholder="yourname@example.com"
                     />
                   </div>
                   <div>
